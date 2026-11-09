@@ -1,0 +1,588 @@
+/* 清除元素默认的内外边距 */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+/* 让所有斜体_不倾斜 */
+em,
+i {
+    font-style: normal;
+}
+/* 去掉列表前面的小点 */
+li {
+    list-style: none;
+}
+/* 图片没有边框_去掉图片底侧的空白缝隙 */
+img {
+    border: 0; /* ie6 */
+    vertical-align: middle;
+}
+/* 让button 按钮 变成小手 */
+button {
+    cursor: pointer;
+}
+/* 取消链接的下划线 */
+a {
+    color: #666;
+    text-decoration: none;
+}
+a:hover {
+    color: #e33333;
+}
+h4 {
+    font-weight: 400;
+}
+
+/* 整屏背景：水墨剪影风峰林云海（img/bg.jpg，自己画的），配色参考武陵源雨后实景
+   配色：天空 #7f8d96→#dde3e3 灰蓝 / 云雾 #eef2f1 / 峰林岩体 近 #77736a → 远 #a6aeac 砂岩暖灰、植被 近 #2d4d36 → 远 #8fa199 只在峰顶和崖壁 / 金日 #f6d27a
+   原图山峰太满、戳进了面板内容区域显得杂乱，和纯色（#b0bbbe，和 body 底色一致）按 70% 混合调淡，只留一层若隐若现的氛围 */
+body {
+    background: #b0bbbe url(../img/bg.jpg) no-repeat center bottom / cover fixed;   /* fixed：按屏幕大小铺满，底部不漏边 */
+}
+
+/* 实现rem适配 */
+@media screen and (max-width: 1024px) {
+    html {
+        font-size: 42.66px !important;
+    }
+}
+@media screen and (min-width: 1920px) {
+    html {
+        font-size: 80px !important;
+    }
+}
+
+/* 父容器_大盒子：整个屏幕的flex为10，以下按3：4：3比例划分 */
+.viewport {
+    display: flex;
+    min-width: 1024px;
+    max-width: 1920px;
+    min-height: 780px;
+    margin: 0 auto;
+    padding: 1.1rem .25rem 0;
+}
+/* 左边区域 */
+.viewport .column {
+    flex: 3;
+}
+/* 中间区域 */
+.viewport .column:nth-child(2) {
+    flex: 4;
+}
+/* 右边区域 */
+.viewport .column:nth-child(3) {
+    flex: 3;
+}
+/* 中间栏左右各留 .25rem 间隔 */
+.viewport .column:nth-child(2) {
+    margin: 0 .25rem;
+}
+
+/* 公共面板样式（照老师 1.2 节的 border-image 写法，边框图换成自己画的山水元素） */
+/* 边框图都是 2 倍图（960×480），所以切割值是设计尺寸的 2 倍：上 50 右 140 下 90 左 160 像素 → ×2 */
+.panel {
+    position: relative;
+    border: 15px solid transparent;
+    border-image-source: url(../img/border-peaks.png);
+    border-width: .625rem 1.75rem 1.125rem 2rem;    /* 50px 140px 90px 160px ÷ 80 */
+    border-image-slice: 100 280 180 320 fill;        /* fill：边框图中间部分也铺上（边框图已去掉底色，面板透明，背景直接透出来） */
+    margin-bottom: .25rem;
+}
+.inner {
+    position: absolute;
+    /* 负的边框宽度：让内容区铺满整个面板，而不是只占边框围出来的中间部分 */
+    top: -.625rem;
+    right: -1.75rem;
+    bottom: -1.125rem;
+    left: -2rem;
+    padding: .3rem .45rem;
+    /* 竖向 flex：上面是小标题，下面的图表容器占满剩下的高度 */
+    display: flex;
+    flex-direction: column;
+}
+/* 面板底板和框线：用伪元素画，位置和 .inner 一样铺满整个面板
+   ::before 在内容下面：一层很淡的白色（只提亮、不改变背景的颜色）+ 一圈金色细线
+   ::after 在内容上面：四个角各一个金色的 L 形角标，像古画装裱的包角 */
+.panel::before,
+.panel::after {
+    content: "";
+    position: absolute;
+    top: -.625rem;
+    right: -1.75rem;
+    bottom: -1.125rem;
+    left: -2rem;
+    pointer-events: none;   /* 不挡住图表的鼠标交互 */
+}
+.panel::before {
+    background-color: rgba(255, 255, 255, .16);
+    border: 1px solid rgba(214, 190, 140, .75);
+    border-radius: .06rem;
+    box-shadow: inset 0 0 .15rem rgba(255, 255, 255, .25);   /* 内发光，让框线更柔和 */
+}
+/* center2 是地图所在的视觉重心，底板比其他面板更"实"一点，不会被淡化后的背景吃掉 */
+.center2::before {
+    background-color: rgba(255, 255, 255, .32);
+}
+.panel::after {
+    /* 8 条渐变色块拼成 4 个 L 形角：每个角一横一竖 */
+    background:
+        linear-gradient(#d6be8c, #d6be8c) left top / .3rem .04rem,
+        linear-gradient(#d6be8c, #d6be8c) left top / .04rem .3rem,
+        linear-gradient(#d6be8c, #d6be8c) right top / .3rem .04rem,
+        linear-gradient(#d6be8c, #d6be8c) right top / .04rem .3rem,
+        linear-gradient(#d6be8c, #d6be8c) left bottom / .3rem .04rem,
+        linear-gradient(#d6be8c, #d6be8c) left bottom / .04rem .3rem,
+        linear-gradient(#d6be8c, #d6be8c) right bottom / .3rem .04rem,
+        linear-gradient(#d6be8c, #d6be8c) right bottom / .04rem .3rem;
+    background-repeat: no-repeat;
+}
+/* 面板小标题：左边一条朱红竖线（和印章呼应）+ 深墨色楷体字*/
+.panel h2 {
+    position: relative;
+    width: 75%;
+    height: .46rem;
+    line-height: .46rem;
+    padding-left: .22rem;
+    background: linear-gradient(to right, rgba(248, 246, 238, .85), rgba(248, 246, 238, .55) 55%, rgba(248, 246, 238, 0));
+    font-family: "KaiTi", "楷体", serif;
+    font-size: .28rem;
+    font-weight: 400;
+    letter-spacing: .02rem;
+    color: #24332e;
+}
+.panel h2::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: .08rem;
+    width: .06rem;
+    height: .3rem;
+    border-radius: .02rem;
+    background-color: #b5452f;
+}
+/* 地图图例说明文字：小字，放在标题和图表之间 */
+.map-legend {
+    margin-top: .05rem;
+    font-size: .14rem;
+    color: #5a6b64;
+}
+/* 标题和切换标签同一行：标题占位置，标签贴右边 */
+.tab-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+.tab-switch {
+    display: flex;
+    gap: .08rem;
+}
+.tab-btn {
+    border: 1px solid rgba(47, 63, 58, .3);
+    background: rgba(255, 255, 255, .5);
+    border-radius: .06rem;
+    padding: .09rem .26rem;
+    font-size: .2rem;
+    font-weight: 500;
+    color: #46564f;
+    cursor: pointer;
+    white-space: nowrap;   /* 字号变大后容器变窄会换行，强制不换行，按钮自己变宽 */
+    transition: background-color .2s ease, color .2s ease;
+}
+.tab-btn.active {
+    background-color: #2f6b5c;
+    border-color: #2f6b5c;
+    color: #f6f3ea;
+}
+/* 图表容器：ECharts 画在这里。flex: 1 让它占满小标题下面剩余的空间，面板高度变了它也跟着变 */
+.chart {
+    flex: 1;
+    margin-top: .1rem;
+    outline: 1px dashed rgba(181, 69, 47, .5);   /* 临时虚线框，用来看容器的位置和大小，放进图表后删掉 */
+    transition: transform .25s ease;
+    transform-origin: center center;
+}
+/* 鼠标移到面板上，图表轻微放大一点（本身格子太小、字看不清的图尤其有用），
+   z-index 提上来保证放大后不被隔壁面板压住 */
+.panel:hover .chart {
+    transform: scale(1.12);
+    position: relative;
+    z-index: 5;
+}
+/* "查看大图"按钮：平时半透明，鼠标移到标题行才完全显示，不抢视觉重点 */
+.view-btn {
+    border: 1px solid rgba(47, 63, 58, .3);
+    background: rgba(255, 255, 255, .6);
+    border-radius: .04rem;
+    padding: .02rem .08rem;
+    font-size: .12rem;
+    color: #46564f;
+    cursor: pointer;
+    opacity: .55;
+    white-space: nowrap;
+    transition: opacity .2s ease, background-color .2s ease;
+}
+.tab-head:hover .view-btn,
+.view-btn:hover {
+    opacity: 1;
+    background-color: #2f6b5c;
+    color: #f6f3ea;
+    border-color: #2f6b5c;
+}
+
+/* ========== 全屏查看大图弹层 ========== */
+.chart-modal {
+    display: none;   /* 默认隐藏，加 .open 才显示 */
+    position: fixed;
+    inset: 0;
+    z-index: 100;
+    background: rgba(18, 26, 23, .92);   /* 深墨绿半透明遮罩 */
+    flex-direction: column;
+    padding: .3rem .5rem;
+}
+.chart-modal.open {
+    display: flex;
+}
+.chart-modal-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-shrink: 0;
+    padding-bottom: .15rem;
+    border-bottom: 1px solid rgba(214, 190, 140, .4);
+}
+.chart-modal-head h2 {
+    color: #f6f3ea;
+    font-family: "KaiTi", "楷体", serif;
+    font-size: .32rem;
+    font-weight: 400;
+}
+.chart-modal-close {
+    color: #f6f3ea;
+    font-size: .18rem;
+    cursor: pointer;
+    padding: .06rem .16rem;
+    border: 1px solid rgba(214, 190, 140, .5);
+    border-radius: .04rem;
+    transition: background-color .2s ease;
+}
+.chart-modal-close:hover {
+    background-color: rgba(214, 190, 140, .2);
+}
+.chart-modal-chart {
+    flex: 1;
+    margin-top: .2rem;
+}
+/* 中间第一块是矮的关键指标条：没有小标题，内边距也收小 */
+.center1 .inner {
+    padding: .15rem .35rem;
+}
+.center1 .chart {
+    margin-top: 0;
+    outline: none;   /* 这一块不是 ECharts 图表，不用虚线调试框 */
+}
+/* KPI 条：5 个数字横向等分 */
+.kpi-bar {
+    display: flex;
+    align-items: flex-start;   /* 色块保持原来内容撑开的大小，不拉伸；整体贴顶，紧挨着标题，多出来的空白都留在下面 */
+    height: 100%;
+}
+.kpi-item {
+    position: relative;
+    flex: 1;
+    text-align: center;
+    padding: .06rem .06rem .08rem;
+    border-radius: .08rem;
+    cursor: default;
+    transition: transform .25s ease, box-shadow .25s ease, background-color .25s ease;
+    /* 淡色底卡片，颜色跟着数字的 tone 走（下面按 tone 覆盖），数字从背景里"浮"出来 */
+    background-color: rgba(36, 51, 46, .05);
+}
+/* 项与项之间：上下渐隐的金色竖线，比一条死板的实线细分隔更有质感，呼应边框上的金线 */
+.kpi-item + .kpi-item::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 12%;
+    bottom: 12%;
+    width: 1px;
+    background: linear-gradient(to bottom, transparent, rgba(214, 190, 140, .8), transparent);
+}
+.kpi-value {
+    display: block;
+    font-size: .8rem;   /* 再加大：配合 center1 加高到 2.2rem */
+    font-weight: 800;
+    line-height: 1.1;
+    letter-spacing: .01rem;
+    color: #24332e;   /* 默认墨色，下面按含义覆盖 */
+    /* 不换行：单位是"位"这种汉字时，CSS 默认允许在汉字前断行，数字和单位会被拆成两行，
+       撑高这一格、跟别的格子不对齐，所以强制数字和单位连在一行 */
+    white-space: nowrap;
+}
+.kpi-value .unit {
+    font-size: .22rem;
+    font-weight: 400;
+    margin-left: .03rem;
+    opacity: .8;
+}
+.kpi-label {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: .17rem;
+    color: #46564f;
+    margin-top: .08rem;
+    letter-spacing: .01rem;
+    white-space: nowrap;   /* 不换行，换行会把矮条撑高、挤变形 */
+}
+/* 标签前面一个彩色圆点，颜色跟数字同一个 tone——仿照教程"●订单量"的做法，但用咱们自己的配色 */
+.kpi-dot {
+    display: inline-block;
+    width: .1rem;
+    height: .1rem;
+    border-radius: 50%;
+    margin-right: .07rem;
+    flex-shrink: 0;
+}
+/* 按数值含义配色+发光：青=好、砂岩红=差、金=温度这种没有好坏之分的中性值；
+   数字颜色、底卡片颜色、发光阴影三处统一换成同一个 tone 色，醒目感是"整体一块"亮起来，不只是文字变色；
+   颜色比之前那版加深的调回更亮更饱和（之前太深看起来发暗） */
+.kpi-item.tone-warm { background-color: rgba(232, 152, 47, .18); }
+.kpi-item.tone-good { background-color: rgba(34, 163, 147, .18); }
+.kpi-item.tone-bad  { background-color: rgba(232, 87, 60, .2); }
+.kpi-item.tone-warm .kpi-value { color: #e8982f; text-shadow: 0 0 .14rem rgba(232, 152, 47, .55); }
+.kpi-item.tone-good .kpi-value { color: #22a393; text-shadow: 0 0 .14rem rgba(34, 163, 147, .55); }
+.kpi-item.tone-bad  .kpi-value { color: #e8573c; text-shadow: 0 0 .14rem rgba(232, 87, 60, .55); }
+.kpi-item.tone-warm .kpi-dot { background-color: #e8982f; }
+.kpi-item.tone-good .kpi-dot { background-color: #22a393; }
+.kpi-item.tone-bad  .kpi-dot { background-color: #e8573c; }
+
+/* 鼠标悬停：轻微上浮+放大，阴影和底色都跟着加深一点，让人感觉这块"活"的 */
+.kpi-item:hover {
+    transform: translateY(-.05rem) scale(1.04);
+    box-shadow: 0 .1rem .22rem rgba(36, 51, 46, .22);
+}
+.kpi-item.tone-warm:hover { background-color: rgba(232, 152, 47, .28); }
+.kpi-item.tone-good:hover { background-color: rgba(34, 163, 147, .28); }
+.kpi-item.tone-bad:hover  { background-color: rgba(232, 87, 60, .3); }
+
+/* 五种边框交错使用（每张都有底部云雾）：
+   peaks 峰林 / pine 迎客松 / peaks-seal 峰林+印章 / pine-seal 迎客松+印章 / mist 只有云雾 */
+.left1, .center4, .right2   { border-image-source: url(../img/border-pine.png); }
+.left2, .center3, .right3   { border-image-source: url(../img/border-peaks.png); }
+.left3                      { border-image-source: url(../img/border-pine-seal.png); }
+.center2, .right1           { border-image-source: url(../img/border-peaks-seal.png); }
+.center1                    { border-image-source: url(../img/border-mist.png); }
+
+/* 各区域高度：设计稿 1920×1080，1rem = 80px，总高 13.5rem，减去顶部标题区 1.3rem 剩 12.2rem */
+/* 左右两栏各 3 块，每块下边距 .25rem：(12.2 - .75) ÷ 3 ≈ 3.81rem */
+.left1, .left2, .left3,
+.right1, .right2, .right3 {
+    height: 3.81rem;
+}
+/* 中间栏：第 1 块 1.2rem + 第 2 块 6.44rem + 底部并排两块 3.81rem + 3 个下边距 .75rem = 12.2rem */
+.center1 {
+    /* 缩到贴合色块实际高度（量出来 1.34rem，留一点余量到 1.4rem），色块不再居中/贴顶留白，
+       下面多出来的 .8rem 全部加给 center2 地图 */
+    height: 1.4rem;
+    border: none;   /* 去掉边框和山水纹理图，KPI 条不需要单独的卡片框，直接铺满 */
+    margin-bottom: 0;   /* 和 center2 之间原本有 .25rem 的通用面板间距，KPI 色块紧贴地图面板看着更连贯，省出来的加给 center2 */
+}
+/* 不要金线、四角装饰、白底——KPI 内容自己有颜色块，不需要外面再套一层卡片 */
+.center1::before,
+.center1::after {
+    content: none;
+}
+.center1 .inner {
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    padding: 0 .1rem;
+}
+.center2 {
+    /* 原来 5.44rem，header 缩小省出 .2rem + center1 去掉 margin-bottom 省出 .25rem + center1 缩到贴合色块高度再省出 .8rem，都加在这 */
+    height: 6.69rem;
+}
+.center-bottom {
+    display: flex;
+}
+.center-bottom .panel {
+    flex: 1;
+    height: 3.81rem;
+}
+/* center3 原来靠 margin-right 和 center4 隔开，center4 现在并进 center3 了（见 html 注释），不用再留边距 */
+
+/* ========== 标题区 ========== */
+/* 标题字体：马善政毛笔楷书（SIL OFL 免费可商用），只截取了标题用到的字，文件约 10KB */
+@font-face {
+    font-family: "MaShanZheng";
+    src: url(../fonts/MaShanZheng-title.ttf);
+}
+/* 占住 .viewport 顶部留出的 1.1rem（原来 1.3rem，横幅上下露出一圈灰底，看着像多出一条空隙，
+   缩小到贴着横幅的尺寸，省出来的 .2rem 加给 center2 地图） */
+header {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    max-width: 1920px;
+    height: 1.1rem;
+    margin: 0 auto;
+}
+/* 卷轴横幅：底色用上深下浅的 CSS3 渐变，上下各一条金线 */
+.scroll {
+    position: absolute;
+    left: 50%;
+    top: .05rem;
+    width: 11.4rem;
+    height: 1rem;
+    margin-left: -5.7rem;   /* 宽度的一半，让横幅水平居中 */
+    background: linear-gradient(to bottom, rgba(22, 56, 48, .95), rgba(40, 86, 74, .95));
+    border-top: 2px solid rgba(214, 190, 140, .7);
+    border-bottom: 2px solid rgba(214, 190, 140, .7);
+}
+/* 两端的卷轴杆：用伪元素画，比横幅上下各长出一点，横向渐变做出圆木的立体感 */
+.scroll::before,
+.scroll::after {
+    content: "";
+    position: absolute;
+    top: -.08rem;
+    width: .14rem;
+    height: 1.16rem;
+    border-radius: .07rem;
+    background: linear-gradient(to right, #5a3f2c, #a9825e, #5a3f2c);
+}
+.scroll::before {
+    left: -.14rem;
+}
+.scroll::after {
+    right: -.14rem;
+}
+/* 标题文字：行高等于横幅高度，文字就上下居中；
+   文字里填一条渐变，渐变从右移到左，就像一道光扫过（CSS3 动画） */
+.scroll h1 {
+    line-height: .96rem;
+    text-align: center;
+    font-family: "MaShanZheng", "KaiTi", serif;   /* 字体文件没加载出来时退回楷体 */
+    font-size: .72rem;
+    font-weight: 400;       /* 毛笔字本身有粗细，不再加粗，否则笔画会糊 */
+    letter-spacing: .06rem;   /* 字变大后字距收一点，免得碰到右边的印章 */
+    filter: drop-shadow(0 .02rem .03rem rgba(0, 0, 0, .45));   /* 投影让字浮起来；文字是透明的，所以不用 text-shadow */
+    color: transparent;
+    background: linear-gradient(100deg, #e6eee8 40%, #fff3c9 50%, #e6eee8 60%);
+    background-size: 300% 100%;
+    -webkit-background-clip: text;
+    background-clip: text;
+    animation: shine 6s linear infinite;
+}
+@keyframes shine {
+    from { background-position: 100% 0; }
+    to   { background-position: 0 0; }
+}
+/* ========== 词云面板的背景光晕 + 装饰圆环（right3）========== */
+/* 呼吸光晕：径向渐变 + 一个很慢的缩放透明度动画，给词云衬一层"活"的底色，
+   不是一块死白板。默认青绿（好评基调），切到差评 tab 时 .right3 加 .tone-bad-bg 换成暖红 */
+.right3 .chart {
+    position: relative;
+}
+.right3 .chart::before {
+    content: "";
+    position: absolute;
+    inset: -8%;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(63, 158, 143, .28) 0%, rgba(63, 158, 143, .08) 55%, transparent 75%);
+    animation: breathe 4s ease-in-out infinite;
+    pointer-events: none;
+    transition: background .4s ease;
+    z-index: 0;
+}
+.right3.tone-bad-bg .chart::before {
+    background: radial-gradient(circle, rgba(192, 88, 63, .28) 0%, rgba(192, 88, 63, .08) 55%, transparent 75%);
+}
+@keyframes breathe {
+    0%, 100% { transform: scale(.94); opacity: .75; }
+    50%      { transform: scale(1.04); opacity: 1; }
+}
+/* 装饰圆环：两圈很淡的虚线圆，绕着词云慢慢转，呼应边框上的山水印章，增加一点"仪式感" */
+.right3 .chart::after {
+    content: "";
+    position: absolute;
+    inset: 4%;
+    border-radius: 50%;
+    border: 1px dashed rgba(214, 190, 140, .35);
+    animation: spin 40s linear infinite;
+    pointer-events: none;
+    z-index: 0;
+}
+@keyframes spin {
+    from { transform: rotate(0deg); }
+    to   { transform: rotate(360deg); }
+}
+/* echarts 画在 canvas 上，层级要盖过光晕和圆环（它俩是 ::before/::after，z-index:0），
+   canvas 本身没法单独设置层级，所以给光晕圆环都压到 0，canvas 默认在普通流里已经在它们上面 */
+.right3 .chart canvas {
+    position: relative;
+    z-index: 1;
+}
+/* 纯 HTML+CSS 词云：每个词是绝对定位的一个 <span>，自己循环播放一条淡入淡出动画，
+   duration、delay 都是 JS 生成时随机定的（写在行内 style 的 --dur/--delay 变量里），
+   所以每个词渐隐渐现的节奏都错开，不是整批一起动 */
+/* 不用发光了，改成实色字 + 细描边：颜色按这个词的排名渐变算出来，直接作为文字颜色（见 js 里的 color） */
+.word-cloud-item {
+    position: absolute;
+    /* 重要：js 算的 left/top 是这个词的"中心点"坐标，不加这个 translate 的话，CSS 会把 left/top
+       当成左上角，字就会整体往右下偏，偏移量还跟字号成正比——字越大偏得越明显，"景色"这种最大的
+       词偏得最夸张，看着完全不在该在的地方，就是这个问题 */
+    transform: translate(-50%, -50%);
+    white-space: nowrap;
+    line-height: 1;
+    font-weight: 900;
+    letter-spacing: .01rem;
+    color: #fdfbf5;   /* 字心统一用白色，不管排名高低都清楚看得见，颜色区分交给边缘发光 */
+    text-shadow:
+        0 0 .035rem var(--glow, rgba(255,255,255,.9)),
+        0 0 .08rem var(--glow, rgba(255,255,255,.6));
+    pointer-events: none;
+    animation: wordFade var(--dur, 5s) ease-in-out var(--delay, 0s) infinite;
+}
+/* 原来 0%/100%=隐、50%=全显是个尖三角，字刚显清楚就开始淡出；改成显示阶段拉长一段平台期，
+   字能稳稳停留一会儿再淡出，不是一闪而过 */
+/* 完全显示的时间窗口缩短（原来 22%~78% 占了一大半周期），大部分时间都在渐隐渐现的过程中，
+   真正"全亮"的瞬间很短——这样同一时刻全亮的词变少，重叠的概率自然就低了 */
+/* 原地消失：不带位移/缩放了，只是透明度变化，字不会"飘一下"再出现 */
+@keyframes wordFade {
+    0%, 100% { opacity: 0; }
+    48%, 52% { opacity: 1; }
+}
+/* 不是当前 tab 的词云整体隐藏（不占位、不计算动画），切 tab 时才显示 */
+.word-cloud-set {
+    position: absolute;
+    inset: 0;
+    display: none;
+}
+.word-cloud-set.active {
+    display: block;
+}
+/* 定格：.right3 加 .paused 后，不是在动画随机某一帧原地冻结（那样会有一半词正好淡出到看不见），
+   而是让所有词都强制显示出来——因为位置已经做了防重叠，全部显示出来也不会挤成一团，正好拿来通览全部 */
+.right3.paused .word-cloud-item {
+    animation-play-state: paused;
+    opacity: 1 !important;
+    transform: translate(-50%, -50%) !important;   /* 定格时也要保留居中偏移，不然字会跳去左上角 */
+}
+
+/* 印章：和面板边框上的"武陵"印章呼应，两个字竖排 */
+.scroll .seal {
+    position: absolute;
+    right: .18rem;  /* 字变大后印章往右靠，和标题留出间隙 */
+    top: .27rem;
+    padding: .04rem .05rem;
+    border-radius: .03rem;
+    background-color: #b5452f;
+    color: #f6e9d8;
+    font-family: "KaiTi", "楷体", serif;
+    font-size: .16rem;
+    line-height: .18rem;
+    writing-mode: vertical-rl;
+}

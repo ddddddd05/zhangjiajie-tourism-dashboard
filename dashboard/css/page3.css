@@ -1,0 +1,216 @@
+/* 页面三：经典的 2×2 四宫格网格格局样式 */
+body {
+    background-color: #0b0f19;
+    margin: 0;
+    padding: 0;
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+}
+
+/* 主容器：设定为严格的 2行 2列 网格，框与框的间距设为 25px */
+.main-container {
+    position: absolute;
+    top: 125px;
+    left: 20px;
+    right: 20px;
+    bottom: 20px;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr); /* 左右两列平分 */
+    grid-template-rows: repeat(2, 1fr);    /* 上下两行平分 */
+    gap: 25px;                             /* 框与框之间的间隔 */
+}
+
+/* 玻璃质感面板：将背景色透明度从 0.05 调低到 0.02，边框也调细/调透，实现更高通透感 */
+.glass-panel {
+    background: rgba(255, 255, 255, 0.00);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 10px;
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+    box-sizing: border-box;
+    width: 100%;
+    height: 100%;
+}
+/* 右下角轮播舱样式 */
+.comment-carousel-box {
+    width: 100%;
+    height: calc(100% - 35px);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    overflow: hidden;
+    position: relative;
+    padding: 0 12px 12px 12px;
+    box-sizing: border-box;
+}
+
+.comment-scroll-viewport {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    position: relative;
+}
+
+.comment-scroll-track {
+    position: absolute;
+    width: 100%;
+    animation: scrollUp 15s linear infinite;
+}
+
+.comment-scroll-track:hover {
+    animation-play-state: paused;
+}
+
+.comment-item {
+    padding: 8px 10px;
+    margin-bottom: 8px;
+    background: rgba(255, 255, 255, 0.02);
+    border-left: 3px solid #38bdf8;
+    border-radius: 4px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.comment-text {
+    color: #e5e7eb;
+    font-size: 11px;
+    line-height: 1.3;
+}
+
+.comment-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 10px;
+}
+
+.comment-spot {
+    color: #94a3b8;
+}
+
+.comment-sentiment {
+    padding: 1px 5px;
+    border-radius: 3px;
+}
+.sentiment-neg { background: rgba(239, 68, 68, 0.2); color: #f87171; }
+.sentiment-pos { background: rgba(16, 185, 129, 0.2); color: #34d399; }
+
+@keyframes scrollUp {
+    0% { top: 0; }
+    100% { top: -150%; }
+}
+
+/* 右下角：舆情弹幕墙 */
+.danmu-header {
+    padding: 10px 14px 4px 14px;
+    font-size: 15px;
+    font-weight: bold;
+    color: #f5ecd9;
+    box-sizing: border-box;
+}
+
+.danmu-filters {
+    display: flex;
+    gap: 8px;
+    padding: 0 14px 6px 14px;
+    box-sizing: border-box;
+}
+
+.danmu-spot-tabs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    padding: 0 14px 6px 14px;
+    box-sizing: border-box;
+}
+
+.danmu-spot-tab {
+    padding: 4px 10px;
+    color: #f5ecd9;
+    background: rgba(15, 22, 20, 0.75);
+    border: 1px solid rgba(214, 190, 140, 0.7);
+    border-radius: 11px;
+    cursor: pointer;
+    font-size: 12px;
+    font-weight: bold;
+    transition: all .3s;
+    white-space: nowrap;
+}
+
+.danmu-spot-tab.active {
+    background: #8c1c2b;
+    border-color: #8c1c2b;
+    color: #fff;
+}
+
+.danmu-wall {
+    width: 100%;
+    height: calc(100% - 96px);
+    position: relative;
+    overflow: hidden;
+    padding: 4px 0 10px 0;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+}
+
+.danmu-lane {
+    position: relative;
+    width: 100%;
+    height: 22%;
+    overflow: hidden;
+}
+
+.danmu-lane:hover .danmu-track {
+    animation-play-state: paused;
+}
+
+.danmu-track {
+    display: inline-flex;
+    gap: 20px;
+    position: absolute;
+    top: 0;
+    left: 0;
+    white-space: nowrap;
+    animation-name: danmuMove;
+    animation-timing-function: linear;
+    animation-iteration-count: infinite;
+}
+
+@keyframes danmuMove {
+    from { transform: translateX(0); }
+    to { transform: translateX(-50%); }
+}
+
+.danmu-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    padding: 5px 14px;
+    border-radius: 16px;
+    font-size: 13px;
+    font-weight: bold;
+    white-space: nowrap;
+}
+
+.danmu-item.pos {
+    background: rgba(31, 90, 74, 0.32);
+    border: 1px solid #3fae8a;
+    color: #e3fff2;
+}
+
+.danmu-item.neg {
+    background: rgba(140, 28, 43, 0.32);
+    border: 1px solid #c9596b;
+    color: #ffe4e8;
+}
+
+.danmu-spot-tag {
+    opacity: .75;
+    font-size: 11px;
+    font-weight: normal;
+}

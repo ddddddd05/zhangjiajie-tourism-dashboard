@@ -1,0 +1,76 @@
+
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>张家界文旅数据分析决策大屏</title>
+
+    <!-- 公共样式 -->
+    <link rel="stylesheet" href="css/LscreenDis.css">
+
+    <!-- 页面二专用样式 -->
+    <link rel="stylesheet" href="css/page2.css">
+
+    <!-- 公共脚本 -->
+    <script src="js/echarts.min.js"></script>
+    <script src="js/flexible.js"></script>
+    <script src="js/jquery.min.js"></script>
+</head>
+
+<body>
+    <!-- 页面导航 -->
+    <nav class="page-nav">
+        <div class="nav-left">
+            <a href="index.html" title="综合指挥舱">
+                <img src="img/01_综合指挥舱 .png" alt="综合指挥舱">
+            </a>
+        </div>
+
+        <div class="nav-right">
+            <a class="active" href="page2.html" title="产业健康度">
+                <img src="img/02_产业健康度.png" alt="产业健康度">
+            </a>
+
+            <a href="page3.html" title="舆情治理">
+                <img src="img/03_舆情治理.png" alt="舆情治理">
+            </a>
+        </div>
+    </nav>
+
+    <!-- 页面标题 -->
+    <header>
+        <div class="scroll">
+            <h1>张家界文旅数据分析决策大屏</h1>
+            <span class="seal">武陵</span>
+        </div>
+    </header>
+    <!-- ================= 核心图表数据舱 ================= -->
+<section class="main-content">
+    
+    <!-- 左侧数据舱 -->
+    <div class="left-column">
+        <div class="chart-box" id="chart-scissors"></div>
+        <div class="chart-box" id="chart-revenue-structure"></div> <!-- 预留一个收入结构图 -->
+    </div>
+
+    <!-- 中间 C 位数据舱 -->
+    <div class="center-column">
+        <div class="chart-box main-chart" id="chart-core"></div>
+    </div>
+
+    <!-- 右侧数据舱 (原本的留白区现在变成图表区) -->
+    <div class="right-column">
+        <!-- 原本在左下的客源排行，移动到右上方，更符合阅读动线 -->
+        <div class="chart-box" id="chart-source"></div>
+        <!-- 右下方：入境游复苏对比图 -->
+        <div class="chart-box" id="chart-inbound"></div>
+    </div>
+
+</section>
+<script src="data/tourism.js"></script>
+<script src="data/monthReview.js"></script>
+<script src="js/page2.js"></script>
+</body>
+</html>

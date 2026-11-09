@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>张家界文旅数据分析决策大屏</title>
+    <link rel="stylesheet" href="css/LscreenDis.css">
+    <script src="js/echarts.min.js"></script>
+    <script src="js/flexible.js"></script>
+    <script src="js/jquery.min.js"></script>
+    <style>
+        /* 图片导航贴近页面顶部，保持左一右二布局 */
+        .page-nav {
+            position: absolute;
+            top: 0;
+            left: 20px;
+            right: 20px;
+            z-index: 9999;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            pointer-events: none;
+        }
+        .nav-left,
+        .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            pointer-events: auto;
+        }
+        .nav-right { flex-direction: row; }
+        .page-nav a {
+            display: block;
+            line-height: 0;
+            text-decoration: none;
+            outline-offset: 3px;
+            transition: transform 0.2s ease;
+        }
+        .nav-left a { width: clamp(85px, 11.05vw, 161.5px); }
+        .nav-right a { width: clamp(76.5px, 8.5vw, 131.75px); }
+        .page-nav a img {
+            display: block;
+            width: 100%;
+            height: auto;
+            object-fit: contain;
+        }
+        .page-nav a:hover { transform: translateY(-2px); }
+        @media (max-width: 1000px) {
+            .page-nav { top: 0; left: 10px; right: 10px; }
+            .nav-left a { width: clamp(63.75px, 11.05vw, 106.25px); }
+            .nav-right a { width: clamp(57.8px, 9.35vw, 89.25px); }
+            .nav-left, .nav-right { gap: 2px; }
+        }
+        @media (max-width: 600px) {
+            .page-nav { top: 0; left: 6px; right: 6px; }
+            .nav-left a { width: 59.5px; }
+            .nav-right a { width: 52.7px; }
+        }
+    </style>
+</head>
+<body>
+    <nav class="page-nav" aria-label="大屏页面导航">
+        <div class="nav-left">
+            <a class="active" href="index.html" aria-label="综合指挥舱">
+                <img src="img/01_综合指挥舱 .png" data-file="01_综合指挥舱.png" alt="综合指挥舱">
+            </a>
+        </div>
+        <div class="nav-right">
+            <a href="page2.html" aria-label="产业健康度">
+                <img src="img/02_产业健康度.png" data-file="02_产业健康度.png" alt="产业健康度">
+            </a>
+            <a href="page3.html" aria-label="舆情治理">
+                <img src="img/03_舆情治理.png" data-file="03_舆情治理.png" alt="舆情治理">
+            </a>
+        </div>
+    </nav>
+
+
+    <script>
+        // 兼容图片放在 image、images 或其子文件夹中的情况
+        document.querySelectorAll('.page-nav img[data-file]').forEach(function (img) {
+            const name = img.dataset.file;
+            const paths = [
+                'image/' + name,
+                'images/' + name,
+                'image/导航按钮单独图片/' + name,
+                'images/导航按钮单独图片/' + name,
+                name
+            ];
+            let index = 0;
+            img.onerror = function () {
+                index += 1;
+                if (index < paths.length) img.src = paths[index];
+                else console.error('导航图片未找到：' + name + '。请确认图片与 HTML 的相对路径。');
+            };
+        });
+    </script>
+
+    <!-- 标题区 -->
+    <header>
+        <!-- 卷轴横幅：标题和印章放在横幅里 -->
+        <div class="scroll">
+            <h1>张家界文旅数据分析决策大屏</h1>
+            <span class="seal">武陵</span>
+        </div>
+    </header>
+    <!-- 父容器_大盒子 -->
+    <div class="viewport">
+        <!-- 左边区域 -->
+        <div class="column">
+            <div class="panel left1">
+                <div class="inner">
+                    <h2>月均气温（2014–2023）</h2>
+                    <div class="chart"></div>
+                </div>
+            </div>
+            <div class="panel left2">
+                <div class="inner">
+                    <h2>近十年四季天数</h2>
+                    <div class="chart"></div>
+                </div>
+            </div>
+            <div class="panel left3">
+                <div class="inner">
+                    <h2>空气优良率（月）</h2>
+                    <div class="chart"></div>
+                </div>
+            </div>
+        </div>
+        <!-- 中间区域 -->
+        <div class="column">
+            <div class="panel center1">
+                <div class="inner">
+                    <div class="chart kpi-bar"></div>
+                </div>
+            </div>
+            <div class="panel center2">
+                <div class="inner">
+                    <div class="tab-head">
+                        <h2 id="center2Title">景区分布与口碑</h2>
+                        <div class="tab-switch">
+                            <button type="button" class="tab-btn active" data-tab="map">地图</button>
+                            <button type="button" class="tab-btn" data-tab="province">客源省份</button>
+                        </div>
+                    </div>
+                    <p class="map-legend">气泡大小 = 评价量　颜色 = 好评率　⚠ = 差评率偏高</p>
+                    <div class="chart"></div>
+                </div>
+            </div>
+            <!-- center3、center4 合并成一个宽格子：四季综合评估、游客量与旅游收入两张图先搁置，位置待定 -->
+            <div class="center-bottom">
+                <div class="panel center3">
+                    <div class="inner">
+                        <h2>外省客源 TOP9</h2>
+                        <div class="chart"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- 右边区域 -->
+        <div class="column">
+            <div class="panel right1">
+                <div class="inner">
+                    <h2>景点口碑对比</h2>
+                    <div class="chart"></div>
+                </div>
+            </div>
+            <div class="panel right2">
+                <div class="inner">
+                    <!-- 完整的矩形树图（含景点下钻）信息量大，这个格子放不下，先放主要原因TOP4；
+                         完整版代码还在 js/index.js 的 buildRight2Option 里，阶段D做交互时再接上 -->
+                    <h2>差评原因 TOP5</h2>
+                    <div class="chart"></div>
+                </div>
+            </div>
+            <div class="panel right3">
+                <div class="inner">
+                    <div class="tab-head">
+                        <h2 id="right3Title">好评高频词</h2>
+                        <div class="tab-switch">
+                            <button type="button" class="tab-btn active" data-tab="good">好评</button>
+                            <button type="button" class="tab-btn" data-tab="bad">差评</button>
+                            <button type="button" class="tab-btn" id="right3PauseBtn">⏸ 定格</button>
+                        </div>
+                    </div>
+                    <!-- 纯 HTML+CSS 词云：每个词是一个独立的 <span>，各自配一条随机时长/延迟的
+                         循环淡入淡出动画，不是整张图一起切换——词的位置、动画都由 js/index.js 生成 -->
+                    <div class="chart" id="right3Stage"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- 全屏查看大图用的弹层：默认隐藏，点"查看大图"才打开 -->
+    <div id="chartModal" class="chart-modal">
+        <div class="chart-modal-head">
+            <h2 id="chartModalTitle"></h2>
+            <span class="chart-modal-close" id="chartModalClose">✕ 关闭</span>
+        </div>
+        <div id="chartModalChart" class="chart-modal-chart"></div>
+    </div>
+    <!-- 数据（由 data_processing 里的脚本生成）和图表代码：放在页面最后，等图表容器都创建好了再画图 -->
+    <script src="data/monthTemp.js"></script>
+    <script src="data/seasonDays.js"></script>
+    <script src="data/airMonth.js"></script>
+    <script src="data/zjjGeo.js"></script>
+    <script src="data/spotReview.js"></script>
+    <script src="data/sourceProvince.js"></script>
+    <script src="data/china.js"></script>
+    <script src="data/badReasonCount.js"></script>
+    <script src="data/wordCloud.js"></script>
+    <script src="js/index.js"></script>
+</body>
+</html>

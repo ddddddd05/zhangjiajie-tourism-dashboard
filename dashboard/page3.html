@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>张家界文旅数据分析决策大屏</title>
+
+    <link rel="stylesheet" href="css/LscreenDis.css">
+    <link rel="stylesheet" href="css/page3.css">
+
+    <script src="js/echarts.min.js"></script>
+    <script src="js/flexible.js"></script>
+    <script src="js/jquery.min.js"></script>
+    <script src="data/monthTemp.js"></script>
+    <script src="data/monthReview.js"></script>
+    <script src="data/badReasonCount.js"></script>
+    <script src="data/badWordsBySpot.js"></script>
+    <script src="data/badReasonMonth.js"></script>
+    <script src="data/commentSample.js"></script>
+
+    <style>
+        header {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            width: 100%;
+            height: 1.1rem;
+            margin: 0 auto;
+            z-index: 100;
+        }
+
+        .scroll {
+            position: absolute;
+            left: 50%;
+            top: .05rem;
+            width: 11.4rem;
+            height: 1rem;
+            margin-left: -5.7rem;
+            background: linear-gradient(
+                to bottom,
+                rgba(22, 56, 48, .95),
+                rgba(40, 86, 74, .95)
+            );
+            border-top: 2px solid rgba(214, 190, 140, .7);
+            border-bottom: 2px solid rgba(214, 190, 140, .7);
+        }
+
+        .scroll::before,
+        .scroll::after {
+            content: "";
+            position: absolute;
+            top: -.08rem;
+            width: .14rem;
+            height: 1.16rem;
+            border-radius: .07rem;
+            background: linear-gradient(
+                to right,
+                #5a3f2c,
+                #a9825e,
+                #5a3f2c
+            );
+        }
+
+        .scroll::before { left: -.14rem; }
+        .scroll::after { right: -.14rem; }
+
+        .scroll h1 {
+            width: 100%;
+            height: 100%;
+            line-height: .96rem;
+            text-align: center;
+            font-family: "MaShanZheng", "KaiTi", serif;
+            font-size: .72rem !important;
+            font-weight: 400;
+            letter-spacing: .06rem;
+            color: transparent;
+            background: linear-gradient(
+                100deg,
+                #e6eee8 40%,
+                #fff3c9 50%,
+                #e6eee8 60%
+            );
+            background-size: 300% 100%;
+            -webkit-background-clip: text;
+            background-clip: text;
+            animation: shine 6s linear infinite;
+        }
+
+        @keyframes shine {
+            from { background-position: 100% 0; }
+            to { background-position: 0 0; }
+        }
+
+        .scroll .seal {
+            position: absolute;
+            right: .18rem;
+            top: .27rem;
+            padding: .04rem .05rem;
+            border-radius: .03rem;
+            background-color: #b5452f;
+            color: #f6e9d8;
+            font-family: "KaiTi", "楷体", serif;
+            font-size: .16rem;
+            line-height: .18rem;
+            writing-mode: vertical-rl;
+        }
+
+        .page-nav {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 9999;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            padding: 0 16px;
+            pointer-events: none;
+        }
+
+        .nav-left, .nav-right {
+            display: flex;
+            align-items: flex-start;
+            gap: 8px;
+            pointer-events: auto;
+        }
+
+        .page-nav a {
+            display: block;
+            width: 135px;
+            line-height: 0;
+            transition: transform .2s ease;
+        }
+
+        .page-nav a img {
+            display: block;
+            width: 100%;
+            height: auto;
+        }
+
+        .page-nav a:hover {
+            transform: translateY(2px);
+        }
+    </style>
+</head>
+
+<body>
+    
+    <nav class="page-nav">
+        <div class="nav-left">
+            <a href="index.html" title="综合指挥舱">
+                <img src="img/01_综合指挥舱 .png" alt="综合指挥舱">
+            </a>
+        </div>
+
+        <div class="nav-right">
+            <a href="page2.html" title="产业健康度">
+                <img src="img/02_产业健康度.png" alt="产业健康度">
+            </a>
+
+            <a href="page3.html" title="舆情治理">
+                <img src="img/03_舆情治理.png" alt="舆情治理">
+            </a>
+        </div>
+    </nav>
+
+    <header>
+        <div class="scroll">
+            <h1>张家界文旅数据分析决策大屏</h1>
+            <span class="seal">武陵</span>
+        </div>
+    </header>
+
+    <!-- 经典的 2×2 四宫格网格容器 -->
+    <div class="main-container">
+        <div class="glass-panel" id="panelTopLeft">
+    <!-- 左上角图表内部专属的切换按钮容器 -->
+    <div class="panel-inner-controller" id="topLeftController"></div>
+</div>
+        <div class="glass-panel" id="panelTopRight"></div>
+        <div class="glass-panel" id="panelBottomLeft"></div>
+        <div class="glass-panel" id="panelBottomRight">
+            <div class="danmu-header" id="danmuHeader">舆情弹幕墙 · 真实游客评论</div>
+            <div class="danmu-filters" id="danmuFilters">
+                <div class="danmu-spot-tab sentiment-tab active" data-sentiment="all">全部评价</div>
+                <div class="danmu-spot-tab sentiment-tab" data-sentiment="pos">好评</div>
+                <div class="danmu-spot-tab sentiment-tab" data-sentiment="neg">差评</div>
+            </div>
+            <div class="danmu-spot-tabs" id="danmuSpotTabs"></div>
+            <div class="danmu-wall" id="danmuWall"></div>
+        </div>
+    </div>
+<script src="js/page3.js"></script>
+</body>
+</html>

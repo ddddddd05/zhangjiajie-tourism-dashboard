@@ -1,0 +1,12 @@
+__pycache__/
+*.pyc
+.ipynb_checkpoints/
+.idea/
+.vscode/
+.claude/
+.env
+*.pt
+*.pth
+*.npz
+*.zip
+*.docx

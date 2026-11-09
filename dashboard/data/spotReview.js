@@ -1,0 +1,78 @@
+// 5 个景点的坐标与口碑指标，由 data_processing/07_spot_review_summary.py 生成
+var spotReview = [
+  {
+    "name": "张家界国家森林公园",
+    "lat": 29.3157,
+    "lon": 110.4291,
+    "district": "武陵源区",
+    "total": 39243,
+    "goodRate": 61.1,
+    "goodCount": 23985,
+    "badRate": 3.4,
+    "badCount": 1349,
+    "verifiedRate": 62.2,
+    "avgScore": 4.36,
+    "dateFrom": "2019-08",
+    "dateTo": "2026-10"
+  },
+  {
+    "name": "天门山国家森林公园",
+    "lat": 29.0503,
+    "lon": 110.4786,
+    "district": "永定区",
+    "total": 54163,
+    "goodRate": 70.9,
+    "goodCount": 38412,
+    "badRate": 3.3,
+    "badCount": 1798,
+    "verifiedRate": 74.4,
+    "avgScore": 4.42,
+    "dateFrom": "2019-10",
+    "dateTo": "2026-10"
+  },
+  {
+    "name": "张家界大峡谷玻璃桥",
+    "lat": 29.399,
+    "lon": 110.698,
+    "district": "慈利县",
+    "total": 7937,
+    "goodRate": 65.8,
+    "goodCount": 5226,
+    "badRate": 1.7,
+    "badCount": 136,
+    "verifiedRate": 66.3,
+    "avgScore": 4.56,
+    "dateFrom": "2016-09",
+    "dateTo": "2026-10"
+  },
+  {
+    "name": "黄龙洞",
+    "lat": 29.368,
+    "lon": 110.6147,
+    "district": "武陵源区",
+    "total": 6687,
+    "goodRate": 53.8,
+    "goodCount": 3597,
+    "badRate": 1.6,
+    "badCount": 106,
+    "verifiedRate": 53.5,
+    "avgScore": 4.66,
+    "dateFrom": "2017-08",
+    "dateTo": "2026-10"
+  },
+  {
+    "name": "宝峰湖",
+    "lat": 29.3258,
+    "lon": 110.5469,
+    "district": "武陵源区",
+    "total": 1352,
+    "goodRate": 35.4,
+    "goodCount": 479,
+    "badRate": 4.7,
+    "badCount": 64,
+    "verifiedRate": 41.1,
+    "avgScore": 4.16,
+    "dateFrom": "2016-05",
+    "dateTo": "2026-10"
+  }
+];

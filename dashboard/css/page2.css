@@ -1,0 +1,224 @@
+
+/* 页面二背景 */
+html,
+body {
+    min-height: 100%;
+}
+
+body {
+    background-color: #b0bbbe;
+    background-image: url("../img/bg.jpg");
+    background-repeat: no-repeat;
+    background-position: center center;
+    background-size: cover;
+    background-attachment: fixed;
+}
+
+/* 页面标题 */
+header {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
+    height: 1.1rem;
+    margin: 0 auto;
+    z-index: 100;
+}
+
+.scroll {
+    position: absolute;
+    left: 50%;
+    top: .05rem;
+    width: 11.4rem;
+    height: 1rem;
+    margin-left: -5.7rem;
+    background: linear-gradient(
+        to bottom,
+        rgba(22, 56, 48, .95),
+        rgba(40, 86, 74, .95)
+    );
+    border-top: 2px solid rgba(214, 190, 140, .7);
+    border-bottom: 2px solid rgba(214, 190, 140, .7);
+}
+
+.scroll::before,
+.scroll::after {
+    content: "";
+    position: absolute;
+    top: -.08rem;
+    width: .14rem;
+    height: 1.16rem;
+    border-radius: .07rem;
+    background: linear-gradient(
+        to right,
+        #5a3f2c,
+        #a9825e,
+        #5a3f2c
+    );
+}
+
+.scroll::before {
+    left: -.14rem;
+}
+
+.scroll::after {
+    right: -.14rem;
+}
+
+.scroll h1 {
+    width: 100%;
+    height: 100%;
+    line-height: .96rem;
+    text-align: center;
+    font-family: "MaShanZheng", "KaiTi", serif;
+    font-size: .72rem !important;
+    font-weight: 400;
+    letter-spacing: .06rem;
+    color: transparent;
+    background: linear-gradient(
+        100deg,
+        #e6eee8 40%,
+        #fff3c9 50%,
+        #e6eee8 60%
+    );
+    background-size: 300% 100%;
+    -webkit-background-clip: text;
+    background-clip: text;
+    animation: shine 6s linear infinite;
+}
+
+@keyframes shine {
+    from {
+        background-position: 100% 0;
+    }
+
+    to {
+        background-position: 0 0;
+    }
+}
+
+.scroll .seal {
+    position: absolute;
+    right: .18rem;
+    top: .27rem;
+    padding: .04rem .05rem;
+    border-radius: .03rem;
+    background-color: #b5452f;
+    color: #f6e9d8;
+    font-family: "KaiTi", "楷体", serif;
+    font-size: .16rem;
+    line-height: .18rem;
+    writing-mode: vertical-rl;
+}
+
+/* 页面导航按钮 */
+.page-nav {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 9999;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    padding: 0 16px;
+    pointer-events: none;
+}
+
+.nav-left,
+.nav-right {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    pointer-events: auto;
+}
+
+.page-nav a {
+    display: block;
+    width: 135px;
+    line-height: 0;
+    transition: transform .2s ease;
+}
+
+.page-nav a img {
+    display: block;
+    width: 100%;
+    height: auto;
+}
+
+.page-nav a:hover {
+    transform: translateY(2px);
+}
+
+/* 屏幕适配 */
+@media screen and (max-width: 1024px) {
+    .scroll {
+        width: 11.4rem;
+        margin-left: -5.7rem;
+    }
+}
+
+@media screen and (max-width: 700px) {
+    .page-nav {
+        padding: 0 5px;
+    }
+
+    .nav-left,
+    .nav-right {
+        gap: 2px;
+    }
+
+    .page-nav a {
+        width: 85px;
+    }
+}
+
+/* ================= 页面布局基础 ================= */
+.main-content {
+    position: relative;
+    z-index: 10;
+    display: flex;
+    justify-content: space-between;
+    gap: 2%; /* 保持列与列之间的整齐空隙 */
+    padding: 1.5rem 20px 20px 20px; 
+    height: 100vh;
+    box-sizing: border-box;
+}
+
+/* 左右两列对称，各占 28% 宽度 */
+.left-column, .right-column {
+    width: 28%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+/* 中间主舱占 40% 宽度 */
+.center-column {
+    width: 40%;
+    height: 100%;
+}
+
+/* 玻璃拟态图表容器 (保持你上一版的高透配置不变) */
+.chart-box {
+    width: 100%;
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.15) 0%, rgba(255, 255, 255, 0.05) 100%);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 12px;
+    box-shadow: inset 0 0 15px rgba(255, 255, 255, 0.2), 0 4px 10px rgba(0, 0, 0, 0.03);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+    box-sizing: border-box;
+}
+
+/* 左右两侧的上下图表，各占 48.5% 的高度，中间自然留出间距 */
+#chart-scissors, #chart-revenue-structure, #chart-source, #chart-inbound {
+    height: 48.5%;
+}
+
+/* 中心图表占满 100% 高度 */
+.main-chart {
+    height: 100%;
+}
